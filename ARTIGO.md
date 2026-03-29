@@ -1,4 +1,4 @@
-O analytics saiu do dashboard. Agora cabe no seu celular (Genie + Databricks)
+##O analytics saiu do dashboard. Agora cabe no seu celular (Genie + Databricks)
 **Por Marcela Monteiro Montenegro Gallo**
 *Arquiteta de Dados e AI | 9x AWS Certified | 2x Databricks Certified*
 *Ingram Micro Cloud — Databricks Partner*
