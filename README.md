@@ -1,2 +1,2 @@
 # databricks-genie-analytics
-O Dashboard Morreu. Longa Vida ao Genie: Analytics com Databricks Genie, Delta Lake e Terraform
+O analytics saiu do dashboard. Agora cabe no seu celular (Genie + Databricks)
