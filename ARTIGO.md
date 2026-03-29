@@ -1,4 +1,4 @@
-## O analytics saiu do dashboard. Agora cabe no seu celular (Genie + Databricks)
+# O Dashboard Morreu. Longa Vida ao Genie: como o Analytics está mudando em 2025
 
 **Por Marcela Monteiro Montenegro Gallo**
 *Arquiteta de Dados e AI | 9x AWS Certified | 2x Databricks Certified*
@@ -10,13 +10,19 @@
 
 ## Introdução
 
-Por anos, o ciclo era sempre o mesmo. O analista de negócio pede um dashboard. O time de dados passa uma semana construindo. O dashboard vai para o ar. Três meses depois, o executivo quer uma visão diferente. Novo ticket. Nova semana. Novo dashboard.
+Deixa eu te contar uma história que se repetiu dezenas de vezes na minha carreira.
 
-Esse modelo está chegando ao fim.
+Eu estava numa reunião de alinhamento com o time de BI. Acabávamos de entregar um dashboard novo, semanas de trabalho, dados validados, visual impecável. O diretor comercial abriu, olhou por uns 30 segundos, e mandou uma mensagem no WhatsApp:
 
-Não porque dashboards deixaram de ter valor. Mas porque a expectativa mudou. O usuário de negócio hoje quer fazer uma pergunta e receber uma resposta, não navegar por 15 filtros em um painel estático. Quer acessar do celular, em linguagem natural, sem depender do time de dados para cada nova análise.
+*"Marcela, mas e se eu quiser ver só as lojas do nordeste com ticket acima de R$ 500 nos últimos 45 dias?"*
 
-O Databricks Genie é a resposta para essa mudança. E neste artigo vou mostrar como construir uma arquitetura completa, da geração de dados até a visualização no celular, usando Databricks, Delta Lake e Genie, com toda a infraestrutura provisionada via Terraform.
+Novo ticket. Nova semana. Novo dashboard.
+
+Repeti esse ciclo por anos. E não era falta de competência do time, nem falta de vontade do negócio. Era uma limitação estrutural do modelo: o dashboard responde às perguntas que você sabia que ia fazer quando o construiu. O negócio se move mais rápido do que isso.
+
+Quando comecei a trabalhar com Databricks de verdade, percebi que esse problema tinha solução. E a solução não é construir dashboards mais rápido. É mudar o modelo completamente.
+
+O Databricks Genie é essa mudança. E neste artigo vou mostrar como construir uma arquitetura completa, da geração de dados até a visualização no celular com o Databricks One Mobile, usando Genie para análise em linguagem natural, com toda a infraestrutura provisionada via Terraform.
 
 ---
 
@@ -24,23 +30,23 @@ O Databricks Genie é a resposta para essa mudança. E neste artigo vou mostrar 
 
 O problema não é técnico. É de velocidade e autonomia.
 
-Um dashboard bem construído responde às perguntas que você sabia que ia fazer quando o construiu. Mas o negócio se move mais rápido do que o ciclo de desenvolvimento de BI. Quando o CFO pergunta "qual foi o impacto da campanha de março nas regiões onde temos menos de 3 lojas?", essa pergunta não estava no backlog quando o dashboard foi criado.
+Trabalhei anos construindo dashboards. Aprendi a fazer bem. Aprendi a fazer rápido. E mesmo assim, a fila de solicitações nunca diminuía. Porque cada dashboard novo gerava três perguntas novas que o dashboard não respondia.
 
-O resultado é o gargalo que todo time de dados conhece: fila de solicitações de BI, analistas sobrecarregados, usuários frustrados esperando semanas por uma análise que deveria levar minutos.
+O executivo não quer um painel. Ele quer uma resposta. E quer agora, no celular, enquanto está no aeroporto esperando o voo.
 
-O Genie resolve isso de uma forma elegante: você descreve os dados uma vez, define o contexto de negócio, e qualquer usuário pode fazer perguntas em linguagem natural e receber respostas com gráficos, tabelas e insights, direto no celular.
+O Databricks One Mobile, combinado com o Genie, entrega exatamente isso: o usuário abre o app no celular, digita a pergunta em português, e recebe a resposta com gráfico em segundos. Sem abrir o laptop. Sem esperar o time de dados. Sem ticket.
 
 ---
 
 ## A Arquitetura: do dado bruto ao celular
 
 ```
-Geração de Dados (Python)
+Geração de Dados (Python/Databricks)
         ↓
 Delta Lake — Modelo Medallion
   Bronze → Silver → Gold
         ↓
-Unity Catalog (Governança)
+Unity Catalog (Governança + Lineage)
         ↓
 Databricks SQL Warehouse
         ↓
@@ -48,7 +54,7 @@ AI/BI Dashboard (visualização tradicional)
         +
 Genie Space (linguagem natural)
         ↓
-Mobile (app Databricks ou browser)
+Databricks One Mobile (iOS / Android)
 ```
 
 A arquitetura tem quatro camadas:
@@ -59,7 +65,7 @@ A arquitetura tem quatro camadas:
 
 **Processamento:** Databricks SQL Warehouse executa as queries, tanto para dashboards quanto para as perguntas do Genie.
 
-**Consumo:** AI/BI Dashboard para visualizações fixas e Genie Space para análise conversacional, ambos acessíveis via mobile.
+**Consumo:** AI/BI Dashboard para visualizações fixas e Genie Space para análise conversacional, ambos acessíveis via **Databricks One Mobile**, o app oficial do Databricks para iOS e Android.
 
 ---
 
@@ -109,13 +115,15 @@ No Databricks UI: **AI/BI → Genie → New Space**
 3. Defina exemplos de perguntas e respostas esperadas
 4. Publique o Space
 
-### Passo 5: Acessar pelo celular
+### Passo 5: Acessar pelo Databricks One Mobile
 
-Baixe o app Databricks no iOS ou Android, ou acesse via browser mobile. O Genie Space funciona perfeitamente em telas pequenas. Faça sua primeira pergunta:
+Baixe o **Databricks One** na App Store (iOS) ou Google Play (Android). É o app oficial do Databricks, gratuito.
+
+Faça login com as credenciais do seu workspace. O Genie Space aparece diretamente no app. Faça sua primeira pergunta:
 
 *"Qual foi a loja com maior crescimento de vendas no último trimestre comparado ao mesmo período do ano anterior?"*
 
-O Genie consulta os dados, gera o SQL, executa e retorna o resultado com visualização em segundos.
+O Genie consulta os dados, gera o SQL, executa e retorna o resultado com visualização em segundos, direto na tela do celular. Sem laptop. Sem VPN. Sem esperar o time de dados.
 
 ---
 
@@ -192,18 +200,22 @@ Em projetos que implementei, a redução de tickets de BI foi de 40-60% nos prim
 
 O analytics está mudando. Não de forma gradual, mas de forma estrutural.
 
-O dashboard não vai desaparecer. Ele vai continuar sendo a camada de visualização para métricas fixas e relatórios executivos. Mas a análise exploratória, as perguntas ad-hoc, a investigação de anomalias, tudo isso vai migrar para interfaces conversacionais como o Genie.
+Passei anos no ciclo de tickets de BI. Aprendi muito nesse ciclo. Mas hoje, como Arquiteta de Dados e AI, sei que o papel do time de dados não é ser um gargalo de relatórios. É ser um habilitador de decisões.
 
-A empresa que entender isso primeiro vai ter uma vantagem competitiva real: usuários de negócio mais autônomos, time de dados mais estratégico, e decisões mais rápidas.
+O Databricks Genie com One Mobile é a materialização disso. O executivo faz a pergunta no celular. O Genie responde. O time de dados foca em qualidade, governança e casos de uso estratégicos.
+
+O dashboard não vai desaparecer. Ele vai continuar sendo a camada de visualização para métricas fixas e relatórios executivos. Mas a análise exploratória, as perguntas ad-hoc, a investigação de anomalias, tudo isso vai migrar para interfaces conversacionais.
+
+A empresa que entender isso primeiro vai ter uma vantagem competitiva real.
 
 O Terraform e os notebooks deste artigo estão disponíveis no GitHub. Em menos de uma hora você tem o ambiente completo rodando, da geração de dados até o Genie respondendo perguntas no seu celular.
 
 ---
 
-> Se esse artigo foi útil, compartilha com alguém do seu time que ainda está preso no ciclo de tickets de BI. E me conta nos comentários: qual foi a primeira pergunta que você fez para o Genie?
+> Você ainda está preso no ciclo de tickets de BI? Me conta nos comentários qual foi a última vez que um executivo pediu "só mais um filtro" no dashboard. E compartilha esse artigo com alguém do seu time que precisa ver isso.
 
 ---
 
-*Marcela Monteiro Montenegro Gallo é Arquiteta de Dados e AI na Ingram Micro Cloud, 9x AWS Certified e 2x Databricks Certified.*
+*Marcela Monteiro Montenegro Gallo é Arquiteta de Dados e AI na Ingram Micro Cloud, 9x AWS Certified e 2x Databricks Certified. Referência em arquitetura de dados moderna, Delta Lake e GenAI aplicada a dados.*
 *LinkedIn: [linkedin.com/in/marcelagallo](https://linkedin.com/in/marcelagallo)*
 *Instagram: [@mammgallo](https://instagram.com/mammgallo/)*
